@@ -1,0 +1,15 @@
+{
+  "name": "es-query-builder",
+  "version": "0.0.1",
+  "description": "Elasticsearch Query Builder",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "elasticserch",
+    "querybuilder"
+  ],
+  "author": "",
+  "license": "MIT"
+}
