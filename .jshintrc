@@ -1,0 +1,18 @@
+{
+  "mocha": true,
+  "strict": true,
+  "module": true,
+  "node": true,
+  "noempty": true,
+  "noarg": true,
+  "eqeqeq": true,
+  "jquery": true,
+  "browser": true,
+  "bitwise": true,
+  "mootools": true,
+  "curly": true,
+  "undef": true,
+  "esversion": 6,
+  "nonew": true,
+  "forin": true
+}
