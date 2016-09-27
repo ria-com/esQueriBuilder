@@ -2,7 +2,8 @@
 
 let esQB = require('./index');
 
-let bodyAggr = new esQB.Aggregations.TermsAggregation('body.id')
+let
+    bodyAggr = new esQB.Aggregations.TermsAggregation('body.id')
         .setParam('field', 'body.id')
         .setSize(6)
         .setMinDocCount(10),
@@ -32,6 +33,6 @@ let
     onlyActive = new esQB.Conditions.Term().setFieldValue('status', 0),
     brand = new esQB.Conditions.Term().setFieldValue('brand.id', 9),
     filter = new esQB.Fiters.BoolFilter().addMust(onlyActive).addMust(brand),
-    query = new esQB.Query.Query().setFiltered(filter).setAggregation(bodyAggr).setSize(0);
+    query = new esQB.Query.Query().setType('advertisements').setIndex('auto').setFiltered(filter).setAggregation(bodyAggr).setSize(0);
 
 console.log(JSON.stringify(query.get(), null, 2));
