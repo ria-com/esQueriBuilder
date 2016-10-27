@@ -51,7 +51,6 @@ suite('Aggregation', function () {
         test('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon));
     });
 
-    /* todo */
     suite('.add', function () {
         let parentAggregation = new Aggregation(parentName, type),
             siblingAggregation = new Aggregation(siblingName, type),
