@@ -1,90 +1,152 @@
 "use strict";
 
 let Aggregation = require('./../../lib/aggregations').Aggregation,
-    expect = require('expect');
+    chai = require('chai'),
+    expect = chai.expect,
+    assert = chai.assert;
 
 const
-    aggregationName = 'name',
-    aggregationType = 'type',
-    parameter = {name : 'paramName', value:'paramValue'},
-    size = {name:'size', value:10},
-    minDocCount = {name:'min_doc_count', value:10};
+    parentName = 'parent',
+    siblingName = 'sibling',
+    childName = 'child',
+    type = 'type',
+    parameter = {name: 'paramName', value: 'paramValue'},
+    size = {name: 'size', value: 10},
+    minDocCount = {name: 'min_doc_count', value: 10};
 
-describe('Aggregation', function () {
-    describe('creating', function () {
-        let aggregation = new Aggregation(aggregationName, aggregationType);
+suite('Aggregation', function () {
+    suite('.constructor', function () {
+        let aggregation = new Aggregation(parentName, type),
+            etalon = {parent: {type: {}}};
 
-        it('new instance should be an Aggregation instance', function () {
-            expect(aggregation).toBeA(Aggregation);
-        });
+        test('new instance should be an Aggregation instance', () => expect(aggregation).to.be.instanceOf(Aggregation));
 
-        it(`aggregation.name should be "${aggregationName}"`, function () {
-            expect(aggregation.name).toEqual(aggregationName);
-        });
-
-        it(`aggregation.type should be "${aggregationType}"`, function () {
-            expect(aggregation.type).toEqual(aggregationType);
-        });
-
-        it('aggregation.added should be an empty array', function () {
-            expect(aggregation.added).toEqual([]);
-        });
-
-        it('aggregation.injected should be an empty array', function () {
-            expect(aggregation.injected).toEqual([]);
-        });
-
-        it('aggregation.params should be an empty array', function () {
-            expect(aggregation.params).toEqual([]);
-        });
+        test('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon))
     });
 
-    describe('setParam', function () {
-        let aggregation = new Aggregation(aggregationName, aggregationType);
+    suite('.setParam', function () {
+        let aggregation = new Aggregation(parentName, type).setParam(parameter.name, parameter.value),
+            etalon = {parent: {type: {paramName: "paramValue"}}};
 
-        it('setParam should return Aggregation instance', function () {
-            expect(aggregation.setParam(parameter.name, parameter.value)).toBeA(Aggregation);
-        });
+        test('setParam should return Aggregation instance', () => expect(aggregation).to.be.instanceOf(Aggregation));
 
-        it(`setParam function should add parameter ${parameter.name} to an aggregation`, function () {
-            expect(aggregation.params).toContain(parameter);
-        });
+        test('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon))
     });
 
-    describe('setSize', function () {
-        let aggregation = new Aggregation(aggregationName, aggregationType);
+    suite('.setSize', function () {
+        let aggregation = new Aggregation(parentName, type).setSize(size.value),
+            etalon = {parent: {type: {size: 10}}};
 
-        it('setSize should return Aggregation instance', function () {
-            expect(aggregation.setSize(size.value)).toBeA(Aggregation);
-        });
+        test('setSize should return Aggregation instance', () => expect(aggregation).to.be.instanceOf(Aggregation));
 
-        it(`setSize function should add "size" parameter to an aggregation`, function () {
-            expect(aggregation.params).toContain(size);
-        });
+        test('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon))
     });
 
-    describe('setMinDocCount', function () {
-        let aggregation = new Aggregation(aggregationName, aggregationType);
+    suite('.setMinDocCount', function () {
+        let aggregation = new Aggregation(parentName, type).setMinDocCount(minDocCount.value),
+            etalon = {parent: {type: {min_doc_count: 10}}};
 
-        it('setMinDocCount should return Aggregation instance', function () {
-            expect(aggregation.setMinDocCount(minDocCount.value)).toBeA(Aggregation);
-        });
+        test(' should return Aggregation instance', () => expect(aggregation).to.be.instanceOf(Aggregation));
 
-        it(`setSize function should add "min_doc_count" parameter to an aggregation`, function () {
-            expect(aggregation.params).toContain(minDocCount);
-        });
+        test('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon));
     });
 
     /* todo */
-    describe('add', function () {
+    suite('.add', function () {
+        let parentAggregation = new Aggregation(parentName, type),
+            siblingAggregation = new Aggregation(siblingName, type),
+            etalonSibling = {
+                sibling: {type: {}}
+            },
+            etalon = {
+                parent: {type: {}},
+                sibling: {type: {}}
+            };
+
+        parentAggregation = parentAggregation.add(siblingAggregation);
+
+        test(' should return Aggregation instance', () => expect(parentAggregation).to.be.instanceOf(Aggregation));
+
+        test('`get` result to be equal to etalon', () => expect(parentAggregation.get()).to.be.deep.equal(etalon));
+
+        test(' sibling agregation should be unchanged ', () => expect(siblingAggregation.get()).to.be.deep.equal(etalonSibling));
+
+        test(' passing non-Aggregation object shoud throw an error', () => expect(parentAggregation.add, {}).to.throw(TypeError))
+    });
+
+    suite('inject', function () {
+        let parentAggregation = new Aggregation(parentName, type),
+            childAggregation = new Aggregation(childName, type),
+            etalonChild = {
+                child: {type: {}}
+            },
+            etalon = {
+                parent: {
+                    type: {},
+                    aggs: {
+                        child: {type: {}}
+                    }
+                },
+            };
+
+        parentAggregation = parentAggregation.inject(childAggregation);
+
+        test(' should return Aggregation instance', () => expect(parentAggregation).to.be.instanceOf(Aggregation));
+
+        test('`get` result to be equal to etalon', () => expect(parentAggregation.get()).to.be.deep.equal(etalon));
+
+        test(' child agregation should be unchanged ', () => expect(childAggregation.get()).to.be.deep.equal(etalonChild));
+
+        test(' passing non-Aggregation object shoud throw an error', () => expect(parentAggregation.inject, {}).to.throw(TypeError))
 
     });
 
-    describe('inject', function () {
+    suite('all features', function () {
+        let
+            parentAggregation = new Aggregation(parentName, type)
+                .setParam(parameter.name, parameter.value)
+                .setSize(size.value)
+                .setMinDocCount(minDocCount.value),
+            childAggregation = new Aggregation(childName, type)
+                .setParam(parameter.name, parameter.value)
+                .setSize(size.value)
+                .setMinDocCount(minDocCount.value),
+            siblingAggregation = new Aggregation(siblingName, type)
+                .setParam(parameter.name, parameter.value)
+                .setSize(size.value)
+                .setMinDocCount(minDocCount.value),
 
-    });
+            etalon = {
+                parent: {
+                    type: {
+                        paramName : 'paramValue',
+                        size : 10,
+                        min_doc_count:10
+                    },
+                    aggs: {
+                        child: {
+                            type: {
+                            paramName : 'paramValue',
+                            size : 10,
+                            min_doc_count:10
+                            }
+                        }
+                    },
+                },
+                sibling : {
+                    type : {
+                        paramName : 'paramValue',
+                        size : 10,
+                        min_doc_count:10
+                    }
+                }
+            };
 
-    describe('get', function () {
+        parentAggregation = parentAggregation.add(siblingAggregation).inject(childAggregation);
+
+        test(' parentAggregation shoul be an Aggregation instance', () => expect(parentAggregation).to.be.instanceOf(Aggregation));
+
+        test('`get` result to be equal to etalon', () => expect(parentAggregation.get()).to.be.deep.equal(etalon));
 
     });
 });
