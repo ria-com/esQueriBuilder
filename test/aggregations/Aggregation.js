@@ -1,6 +1,5 @@
 "use strict";
 
-
 let Aggregation = require('./../../lib/aggregations').Aggregation,
     expect = require('expect');
 
