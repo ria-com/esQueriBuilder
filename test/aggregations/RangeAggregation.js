@@ -32,9 +32,9 @@ describe('RangeAggregation', function () {
             range : {
               field : 'fieldName',
               ranges: [
-                {to:100, key:1},
-                {from: 100, to:200, key:2},
-                {from: 200, key:3}
+                {to:100, key:"1"},
+                {from: 100, to:200, key:"2"},
+                {from: 200, key:"3"}
               ]
             }
           }
