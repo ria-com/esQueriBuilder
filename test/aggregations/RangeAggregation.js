@@ -26,14 +26,15 @@ describe('RangeAggregation', function () {
 
   describe('.addRanges', function () {
     let rangesWithoutBounds = [[null, 100], [100, 200], [200, null]],
+        keys = [1, 2, 3],
         etalonWithoutBounds = {
           name : {
             range : {
               field : 'fieldName',
               ranges: [
-                {to:100},
-                {from: 100, to:200},
-                {from: 200}
+                {to:100, key:1},
+                {from: 100, to:200, key:2},
+                {from: 200, key:3}
               ]
             }
           }
@@ -52,7 +53,7 @@ describe('RangeAggregation', function () {
           }
         },
         aggregationWithBounds = new RangeAggregation(aggregationName).setField('fieldName').addRanges(rangesWithBounds),
-        aggregationWithOutBounds = new RangeAggregation(aggregationName).setField('fieldName').addRanges(rangesWithoutBounds);
+        aggregationWithOutBounds = new RangeAggregation(aggregationName).setField('fieldName').addRanges(rangesWithoutBounds, keys);
 
     it('new instance should be an RangeAggregation instance', () =>  expect(aggregationWithBounds).to.be.instanceOf(RangeAggregation));
     it('`get` result to be equal to etalon', () => expect(aggregationWithBounds.get()).to.be.deep.equal(etalonWithBounds));
