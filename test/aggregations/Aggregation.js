@@ -2,8 +2,7 @@
 
 let Aggregation = require('./../../lib/aggregations').Aggregation,
     chai = require('chai'),
-    expect = chai.expect,
-    assert = chai.assert;
+    expect = chai.expect;
 
 const
     parentName = 'parent',
@@ -14,44 +13,44 @@ const
     size = {name: 'size', value: 10},
     minDocCount = {name: 'min_doc_count', value: 10};
 
-suite('Aggregation', function () {
-    suite('.constructor', function () {
+describe('Aggregation', function () {
+    describe('.constructor', function () {
         let aggregation = new Aggregation(parentName, type),
             etalon = {parent: {type: {}}};
 
-        test('new instance should be an Aggregation instance', () => expect(aggregation).to.be.instanceOf(Aggregation));
+        it('new instance should be an Aggregation instance', () => expect(aggregation).to.be.instanceOf(Aggregation));
 
-        test('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon))
+        it('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon))
     });
 
-    suite('.setParam', function () {
+    describe('.setParam', function () {
         let aggregation = new Aggregation(parentName, type).setParam(parameter.name, parameter.value),
             etalon = {parent: {type: {paramName: "paramValue"}}};
 
-        test('setParam should return Aggregation instance', () => expect(aggregation).to.be.instanceOf(Aggregation));
+        it('setParam should return Aggregation instance', () => expect(aggregation).to.be.instanceOf(Aggregation));
 
-        test('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon))
+        it('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon))
     });
 
-    suite('.setSize', function () {
+    describe('.setSize', function () {
         let aggregation = new Aggregation(parentName, type).setSize(size.value),
             etalon = {parent: {type: {size: 10}}};
 
-        test('setSize should return Aggregation instance', () => expect(aggregation).to.be.instanceOf(Aggregation));
+        it('setSize should return Aggregation instance', () => expect(aggregation).to.be.instanceOf(Aggregation));
 
-        test('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon))
+        it('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon))
     });
 
-    suite('.setMinDocCount', function () {
+    describe('.setMinDocCount', function () {
         let aggregation = new Aggregation(parentName, type).setMinDocCount(minDocCount.value),
             etalon = {parent: {type: {min_doc_count: 10}}};
 
-        test(' should return Aggregation instance', () => expect(aggregation).to.be.instanceOf(Aggregation));
+        it(' should return Aggregation instance', () => expect(aggregation).to.be.instanceOf(Aggregation));
 
-        test('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon));
+        it('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon));
     });
 
-    suite('.add', function () {
+    describe('.add', function () {
         let parentAggregation = new Aggregation(parentName, type),
             siblingAggregation = new Aggregation(siblingName, type),
             etalonSibling = {
@@ -64,16 +63,16 @@ suite('Aggregation', function () {
 
         parentAggregation = parentAggregation.add(siblingAggregation);
 
-        test(' should return Aggregation instance', () => expect(parentAggregation).to.be.instanceOf(Aggregation));
+        it(' should return Aggregation instance', () => expect(parentAggregation).to.be.instanceOf(Aggregation));
 
-        test('`get` result to be equal to etalon', () => expect(parentAggregation.get()).to.be.deep.equal(etalon));
+        it('`get` result to be equal to etalon', () => expect(parentAggregation.get()).to.be.deep.equal(etalon));
 
-        test(' sibling agregation should be unchanged ', () => expect(siblingAggregation.get()).to.be.deep.equal(etalonSibling));
+        it(' sibling agregation should be unchanged ', () => expect(siblingAggregation.get()).to.be.deep.equal(etalonSibling));
 
-        test(' passing non-Aggregation object shoud throw an error', () => expect(parentAggregation.add, {}).to.throw(TypeError))
+        it(' passing non-Aggregation object shoud throw an error', () => expect(parentAggregation.add, {}).to.throw(TypeError))
     });
 
-    suite('inject', function () {
+    describe('.inject', function () {
         let parentAggregation = new Aggregation(parentName, type),
             childAggregation = new Aggregation(childName, type),
             etalonChild = {
@@ -90,17 +89,17 @@ suite('Aggregation', function () {
 
         parentAggregation = parentAggregation.inject(childAggregation);
 
-        test(' should return Aggregation instance', () => expect(parentAggregation).to.be.instanceOf(Aggregation));
+        it(' should return Aggregation instance', () => expect(parentAggregation).to.be.instanceOf(Aggregation));
 
-        test('`get` result to be equal to etalon', () => expect(parentAggregation.get()).to.be.deep.equal(etalon));
+        it('`get` result to be equal to etalon', () => expect(parentAggregation.get()).to.be.deep.equal(etalon));
 
-        test(' child agregation should be unchanged ', () => expect(childAggregation.get()).to.be.deep.equal(etalonChild));
+        it(' child agregation should be unchanged ', () => expect(childAggregation.get()).to.be.deep.equal(etalonChild));
 
-        test(' passing non-Aggregation object shoud throw an error', () => expect(parentAggregation.inject, {}).to.throw(TypeError))
+        it(' passing non-Aggregation object shoud throw an error', () => expect(parentAggregation.inject, {}).to.throw(TypeError))
 
     });
 
-    suite('all features', function () {
+    describe('all features', function () {
         let
             parentAggregation = new Aggregation(parentName, type)
                 .setParam(parameter.name, parameter.value)
@@ -143,9 +142,9 @@ suite('Aggregation', function () {
 
         parentAggregation = parentAggregation.add(siblingAggregation).inject(childAggregation);
 
-        test(' parentAggregation shoul be an Aggregation instance', () => expect(parentAggregation).to.be.instanceOf(Aggregation));
+        it(' parentAggregation shoul be an Aggregation instance', () => expect(parentAggregation).to.be.instanceOf(Aggregation));
 
-        test('`get` result to be equal to etalon', () => expect(parentAggregation.get()).to.be.deep.equal(etalon));
+        it('`get` result to be equal to etalon', () => expect(parentAggregation.get()).to.be.deep.equal(etalon));
 
     });
 });
