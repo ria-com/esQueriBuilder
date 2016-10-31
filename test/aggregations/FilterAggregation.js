@@ -5,6 +5,7 @@ let
     FilterAggregation = require('./../../lib/aggregations').FilterAggregation,
     Filter = require('./../../lib/filters').Filter,
     TermFilter = require('./../../lib/filters').TermFilter,
+    BoolFilter = require('./../../lib/filters').BoolFilter,
     TermCondition = require('./../../lib/conditions').Term,
     chai = require('chai'),
     expect = chai.expect;
@@ -23,7 +24,7 @@ describe('FilterAggregation', function () {
     it('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon))
   });
 
-  describe('.setFilter', function () {
+  describe('.setFilter (termFilter)', function () {
     let term = new TermCondition().setFieldValue('field', 'value'),
         termFilter = new TermFilter().addTerm(term),
         aggregation = new FilterAggregation(aggregationName).setFilter(termFilter),
@@ -32,6 +33,28 @@ describe('FilterAggregation', function () {
             filter : {
               term : {
                 field : 'value'
+              }
+            }
+          }
+        };
+
+    it('new instance should be an FilterAggregation instance', () =>  expect(aggregation).to.be.instanceOf(FilterAggregation));
+    it('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon))
+  });
+
+  describe('.setFilter (boolFilter)', function () {
+    let term = new TermCondition().setFieldValue('field', 'value'),
+        boolFilter = new BoolFilter().addMust(term),
+        aggregation = new FilterAggregation(aggregationName).setFilter(boolFilter),
+        etalon = {
+          name : {
+            filter : {
+              bool : {
+                must : [{
+                  term : {
+                    field : 'value'
+                  }
+                }]
               }
             }
           }
