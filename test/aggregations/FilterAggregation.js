@@ -3,7 +3,8 @@
 let
     Aggregation = require('./../../lib/aggregations').Aggregation,
     FilterAggregation = require('./../../lib/aggregations').FilterAggregation,
-    Filters = require('./../../lib/filters').Filter,
+    Filter = require('./../../lib/filters').Filter,
+    TermFilter = require('./../../lib/filters').TermFilter,
     TermCondition = require('./../../lib/conditions').Term,
     chai = require('chai'),
     expect = chai.expect;
@@ -22,9 +23,10 @@ describe('FilterAggregation', function () {
     it('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon))
   });
 
-  describe('.setTerm', function () {
+  describe('.setFilter', function () {
     let term = new TermCondition().setFieldValue('field', 'value'),
-        aggregation = new FilterAggregation(aggregationName).setTerm(term),
+        termFilter = new TermFilter().addTerm(term),
+        aggregation = new FilterAggregation(aggregationName).setFilter(termFilter),
         etalon = {
           name : {
             filter : {
