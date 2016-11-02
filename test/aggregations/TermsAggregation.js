@@ -21,7 +21,16 @@ describe('TermsAggregation', function () {
     it('new instance should be an TermsAggregation instance', () =>  expect(aggregation).to.be.instanceOf(TermsAggregation));
 
     it('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon))
-
   });
+
+  describe('.setScript', function () {
+    let aggregation = new TermsAggregation(aggregationName).setScript('script').setScriptParams({param1: 'value'}),
+        etalon = { name : { terms : { script : 'script', params : {param1 : 'value'}} } };
+
+    it(' new instance should be a TermsAggregation instance', () => expect(aggregation).to.be.instanceOf(TermsAggregation));
+    it('`get` result to be equal to etalon', () => expect(aggregation.get()).to.be.deep.equal(etalon))
+
+
+  })
 
 });
